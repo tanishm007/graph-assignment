@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import dataset from '../utils/data';
-
+import Button from 'react-bootstrap/Button';
 import { useContext } from 'react';
 import { GraphContext } from '../context/context';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import Sidebar from './Sidebar';
 
 
 
@@ -114,15 +115,11 @@ const Graph_x = () => {
     <div> 
       <div>
 
+      <Button variant="primary" onClick={duplicateDatasetAndModifyC}>Change c by 5%</Button>{' '}
+      <Button variant="primary" onClick={duplicateDatasetAndModifyA}>Change a by 10%</Button>{' '}
 
-
-      <button type="button" className="btn" onClick={duplicateDatasetAndModifyC}>
-          Change c by 5%
-        </button>
-        <button type="button" className="btn" onClick={duplicateDatasetAndModifyA}>
-          Change a by 10%
-        </button>
-        <Link to="/hidden" >hidden</Link>
+  
+  
 
         <Notification {...showNotification}/>
         

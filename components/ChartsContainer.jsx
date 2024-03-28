@@ -1,27 +1,34 @@
+// ChartsContainer.jsx 
 import React from 'react';
-import Graph_x from './Graph_x';
-import Graph_g from './Graph_g';
-import { useLocation } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
+import './Navbar.css'
 import { GraphProvider } from '../context/context';
+import Graph_x from './Graph_x';
 import Graph_y from './Graph_y';
+import Graph_g from './Graph_g';
+
 
 const ChartsContainer = () => {
-    const location = useLocation();
+    // ... other imports 
 
     return (
         <div className="charts-container">
-            <GraphProvider>
-
-            {location.pathname === '/' && ( 
-                    <>
-                  
-                      <Graph_x />
-                      <Graph_y/>
-                    </>
-                )}
-
-            {location.pathname === '/hidden' && <Graph_g />}  
-            </GraphProvider>
+            <Navbar /> 
+            <div className="main-content"> {/* New wrapper */}
+                <GraphProvider>
+                    <Sidebar /> 
+                    <div className="graphs">  {/* New wrapper for graphs */}
+                        {location.pathname === '/' && ( 
+                            <>
+                                <Graph_x />
+                                <Graph_y/>
+                            </>
+                        )}
+                        {location.pathname === '/hidden' && <Graph_g />} 
+                    </div>
+                </GraphProvider>
+            </div>
         </div>
     );
 };

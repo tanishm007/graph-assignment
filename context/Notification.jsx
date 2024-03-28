@@ -4,9 +4,9 @@ const Notification = ( {message, display }) => {
     if (!display) return null;  // Don't render if not active
 
     return (
-        <div className="notification"> 
-            {message}
-        </div>
+        <div class="alert alert-info" role="alert">
+  {message}  Give it a click if you like
+</div>
     );
 };
 

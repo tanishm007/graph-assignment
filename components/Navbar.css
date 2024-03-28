@@ -1,0 +1,37 @@
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+   
+    z-index: 10; 
+}
+
+/* Layout */
+.charts-container {
+    display: flex; 
+    flex-direction: column;
+    height: 100vh; /* Ensure full viewport height */  
+}
+
+.main-content {
+    display: flex;
+    flex-grow: 1;  
+    margin-top: 50px;
+}
+
+/* Sidebar */
+.sidebar {
+    /* ... existing sidebar styles */
+    height: 100%; /* Ensure full height of the main-content */
+    position: sticky; /* Keep sidebar visible as you scroll */
+    top: 0;
+    z-index: 5; 
+}
+
+/* Graphs */
+.graphs {
+    flex-grow: 1; 
+    padding: 20px 0 20px 20px; /* Padding: top, right, bottom, left */           
+}
