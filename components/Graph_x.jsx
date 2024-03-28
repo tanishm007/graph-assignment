@@ -3,6 +3,8 @@ import dataset from '../utils/data';
 
 import { useContext } from 'react';
 import { GraphContext } from '../context/context';
+import { Link } from 'react-router-dom';
+import Notification from '../context/Notification';
 
 import {
   Chart as ChartJS,
@@ -63,36 +65,23 @@ export const data = {
 };
 
 const Graph_x = () => {
-  const [modifiedDatasetC, setModifiedDatasetC] = useState(null);
-  const [modifiedDatasetA, setModifiedDatasetA] = useState(null);
+    const { modifiedDatasetC, setModifiedDatasetC, modifiedDatasetA, setModifiedDatasetA, handleAChange, handleCChange, setNotification, showNotification, updateModifiedFg } = useContext(GraphContext);
 
-  const { handleAChange } = useContext(GraphContext);
 
   const duplicateDatasetAndModifyC = () => {
-    const duplicatedData = dataset.map(item => {
-      const modifiedC = item.c * 1.05; // Increase c by 5%
-      return {
-        ...item,
-        c: modifiedC,
-      };
-    });
-
-    setModifiedDatasetC(duplicatedData);
+    
+    handleCChange();
+    
   };
 
   const duplicateDatasetAndModifyA = () => {
 
+      
     handleAChange();
-    
-    const duplicatedData = dataset.map(item => {
-      const modifiedA = item.a * 1.1; // Increase a by 10%
-      return {
-        ...item,
-        a: modifiedA,
-      };
-    });
+    setNotification("F_g graph has been updated!");
+    updateModifiedFg()
+  
 
-    setModifiedDatasetA(duplicatedData);
   };
 
   const mergedDataset = [
@@ -125,15 +114,19 @@ const Graph_x = () => {
     <div> 
       <div>
 
+
       <button type="button" className="btn" onClick={duplicateDatasetAndModifyC}>
           Change c by 5%
         </button>
         <button type="button" className="btn" onClick={duplicateDatasetAndModifyA}>
           Change a by 10%
         </button>
+        <Link to="/hidden" >hidden</Link>
+
+        <Notification {...showNotification}/>
         
    
-
+     
         <Line options={options} data={{...data, datasets: mergedDataset}} />
 
    

@@ -6,7 +6,7 @@ import { GraphProvider } from '../context/context';
 import { Link } from 'react-router-dom'; 
 
 const Home = () => {
-
+  const { showNotification } = useContext(GraphContext);
   return (
     <div> 
       <div>
@@ -16,6 +16,7 @@ const Home = () => {
       <GraphProvider> 
             <Graph_x /> 
             <Graph2/>
+          
         </GraphProvider> 
     
     

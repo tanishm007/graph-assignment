@@ -1,9 +1,10 @@
-import { useState } from 'react'
+
 import { createRoot } from "react-dom/client";
 import Home from '../pages/Home';
 import Hidden from '../pages/Hidden';
 import './App.css'
 import { GraphProvider } from '../context/context';
+import ChartsContainer from "../components/ChartsContainer";
 import {
   createBrowserRouter,
   RouterProvider,
@@ -17,12 +18,9 @@ import './App.css'
 
 const routes = createRoutesFromElements(
   <>
-  <Route path='/' element={<Home />}>
-    
-  </Route>
-
-    
-  <Route path='/hidden' element={<Hidden />} />
+      
+        <Route path='/' element={<ChartsContainer />} /> 
+        <Route path='/hidden' element={<ChartsContainer />} />
 
   </>
 );
@@ -30,8 +28,6 @@ const routes = createRoutesFromElements(
 const router = createBrowserRouter(routes);
 
 function App() {
-
-
 
   return (
     <RouterProvider router = {router} />

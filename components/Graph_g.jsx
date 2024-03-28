@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { datasetfoo } from '../utils/data';
 import { datasetbar } from '../utils/data';
 import { Link } from 'react-router-dom';
 
@@ -46,7 +45,7 @@ const calculateFg = (a, h) => 8 * a + 3 * h;
 
 const Graph_g = () => {
   const { modifiedDatasetA } = useContext(GraphContext)
-  const [modifiedA, setModifiedA] = useState(null);
+  
 
   const handleAChange = () => {
     // Update modifiedA with the new value of a (e.g., increased by 10%)
@@ -54,11 +53,11 @@ const Graph_g = () => {
   };
 
   const dataFa = {
-    labels: datasetfoo.map(item => item.date),
+    labels: dataset.map(item => item.date),
     datasets: [
       {
         label: 'F_a',
-        data: datasetfoo.map(item => calculateFa(item.d)),
+        data: dataset.map(item => calculateFa(item.d)),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
         tension: 0.5

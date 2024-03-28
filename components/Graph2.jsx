@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import dataset from '../utils/data';
 import {datasetbar} from '../utils/data';
+import { useContext } from 'react';
+import { GraphContext } from '../context/context';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -58,20 +60,40 @@ dataset.forEach(item => {
   }
 });
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Original Data',
-      data: dataset1,
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      tension: 0.5
-    }
-  ],
-};
+
+
+
 
 const Graph2 = () => {
+
+  const { modifiedFgData } = useContext(GraphContext);
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Original Data',
+        data: dataset1,
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        tension: 0.5
+      },
+      ...(modifiedFgData ? [ 
+        {
+            label: 'Modified F_g',
+            // Use values from modifiedFgData
+            data: modifiedFgData.map(item => calculateFy(item.d, item.e, item.value)),
+            // ... other styles
+            borderColor: 'rgb(143, 0, 255)',
+            backgroundColor: 'rgba(143, 0, 255, 0.5)',
+            tension: 0.5
+        }
+    ] : [])
+  
+    ],
+  };
+
+
   return (
     <div> 
       <div>
