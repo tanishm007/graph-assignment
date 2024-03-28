@@ -3,6 +3,7 @@ import dataset from '../utils/data';
 import {datasetbar} from '../utils/data';
 import { useContext } from 'react';
 import { GraphContext } from '../context/context';
+import { useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -64,9 +65,15 @@ dataset.forEach(item => {
 
 
 
-const Graph2 = () => {
+const Graph_y = () => {
 
-  const { modifiedFgData } = useContext(GraphContext);
+  const { modifiedFgData , modifiedDatasetA, updateModifiedFg} = useContext(GraphContext);
+
+  useEffect(() => {
+    
+    updateModifiedFg();
+
+}, [modifiedDatasetA]);
 
   const data = {
     labels,
@@ -97,12 +104,11 @@ const Graph2 = () => {
   return (
     <div> 
       <div>
-        {/* Add buttons to change datasets if necessary */}
-        
+       
         <Line options={options} data={data} />
       </div>
     </div>
   );
 };
 
-export default Graph2;
+export default Graph_y;

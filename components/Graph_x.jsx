@@ -79,8 +79,8 @@ const Graph_x = () => {
       
     handleAChange();
     setNotification("F_g graph has been updated!");
-    updateModifiedFg()
-  
+    
+
 
   };
 
@@ -113,6 +113,7 @@ const Graph_x = () => {
   return (
     <div> 
       <div>
+
 
 
       <button type="button" className="btn" onClick={duplicateDatasetAndModifyC}>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { datasetbar } from '../utils/data';
 import { Link } from 'react-router-dom';
 
@@ -47,10 +48,6 @@ const Graph_g = () => {
   const { modifiedDatasetA } = useContext(GraphContext)
   
 
-  const handleAChange = () => {
-    // Update modifiedA with the new value of a (e.g., increased by 10%)
-    setModifiedA(/* New value of a */);
-  };
 
   const dataFa = {
     labels: dataset.map(item => item.date),

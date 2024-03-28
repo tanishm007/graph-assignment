@@ -12,6 +12,8 @@ const GraphContext = createContext({
     setNotification: () => {},
     modifiedFgData: null,
     setModifiedFgData: () => {},
+    
+  
 });
 
 const GraphProvider = ({ children }) => {
@@ -21,6 +23,7 @@ const GraphProvider = ({ children }) => {
   const [modifiedDatasetC, setModifiedDatasetC] = useState(null);
 
   const [showNotification, setShowNotification] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setNotification = (message) => { 
 
@@ -40,9 +43,13 @@ const GraphProvider = ({ children }) => {
       });
   
       setModifiedDatasetA(duplicatedData);
+
+      
     
 
   };
+
+
 
   const handleCChange = () => {
 
@@ -59,7 +66,9 @@ const GraphProvider = ({ children }) => {
   }
 
 
-  const updateModifiedFg = () => {
+  const updateModifiedFg = async () => {
+ 
+    
     if (modifiedDatasetA) {
         const newFgData = modifiedDatasetA.map(item => ({
             date: item.date,

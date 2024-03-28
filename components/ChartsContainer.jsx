@@ -3,7 +3,7 @@ import Graph_x from './Graph_x';
 import Graph_g from './Graph_g';
 import { useLocation } from 'react-router-dom';
 import { GraphProvider } from '../context/context';
-import Graph2 from './Graph2';
+import Graph_y from './Graph_y';
 
 const ChartsContainer = () => {
     const location = useLocation();
@@ -14,8 +14,9 @@ const ChartsContainer = () => {
 
             {location.pathname === '/' && ( 
                     <>
+                  
                       <Graph_x />
-                      <Graph2/>
+                      <Graph_y/>
                     </>
                 )}
 
