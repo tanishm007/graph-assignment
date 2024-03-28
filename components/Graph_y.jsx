@@ -87,7 +87,7 @@ const Graph_y = () => {
       },
       ...(modifiedFgData ? [ 
         {
-            label: 'Modified F_g',
+            label: 'Modified F_y',
             // Use values from modifiedFgData
             data: modifiedFgData.map(item => calculateFy(item.d, item.e, item.value)),
             // ... other styles

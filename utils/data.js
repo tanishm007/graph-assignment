@@ -48,39 +48,7 @@
     }
   ];
 
-  export const datasetfoo = [
-    {
-      id: 1,
-      date: "1/3/2024",
-      d: 3,
-      e: 1
-    },
-    {
-      id: 2,
-      date: "2/3/2024",
-      d: 5,
-      e: 5
-    },
-    {
-      id: 3,
-      date: "3/3/2024",
-      d: 2,
-      e: 3
-    },
-    {
-      id: 4,
-      date: "4/3/2024",
-      d: 4,
-      e: 4
-    },
-    {
-      id: 5,
-      date: "5/3/2024",
-      d: 6,
-      e: 2
-    }
-  ];
-  
+
   export const datasetbar = [
     {
       id: 1,

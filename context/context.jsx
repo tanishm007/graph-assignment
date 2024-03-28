@@ -8,8 +8,7 @@ const GraphContext = createContext({
   modifiedDatasetC: null,
   handleAChange: () => {}, 
   handleCChange: () => {}, 
-  showNotification: false,  // New state for notifications
-    setNotification: () => {},
+  
     modifiedFgData: null,
     setModifiedFgData: () => {},
     
@@ -22,27 +21,27 @@ const GraphProvider = ({ children }) => {
   const [modifiedDatasetA, setModifiedDatasetA] = useState(null);
   const [modifiedDatasetC, setModifiedDatasetC] = useState(null);
 
-  const [showNotification, setShowNotification] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const setNotification = (message) => { 
 
-    setShowNotification({message, display: true});
-    setTimeout(() => setShowNotification(false), 5000); // Hide after 5 seconds
-};
 
   const handleAChange = () => {
     // ... your modification logic
-    console.log('context called')
-    const duplicatedData = dataset.map(item => {
-        const modifiedA = item.a * 1.1; // Increase a by 10%
-        return {
+    if (modifiedDatasetA) {
+      // Modify existing modifiedDatasetA
+      const updatedData = modifiedDatasetA.map(item => ({
           ...item,
-          a: modifiedA,
-        };
-      });
-  
+          a: item.a * 1.1 // Increase 'a' by 10% on the current value
+       }));
+      setModifiedDatasetA(updatedData);
+
+  } else {
+      // First time modification from original dataset
+      const duplicatedData = dataset.map(item => ({
+          ...item,
+          a: item.a * 1.1 // Increase 'a' by 10%
+      }));
       setModifiedDatasetA(duplicatedData);
+  }
 
       
     
@@ -53,15 +52,36 @@ const GraphProvider = ({ children }) => {
 
   const handleCChange = () => {
 
-    const duplicatedData = dataset.map(item => {
-      const modifiedC = item.c * 1.05; // Increase c by 5%
-      return {
-        ...item,
-        c: modifiedC,
-      };
-    });
 
-    setModifiedDatasetC(duplicatedData);
+    if(modifiedDatasetC)
+    {
+      const duplicatedData = modifiedDatasetC.map(item => {
+        const modifiedC = item.c * 1.05; // Increase c by 5%
+        return {
+          ...item,
+          c: modifiedC,
+        };
+      });
+
+      setModifiedDatasetC(duplicatedData);
+    }
+    else{
+
+      const duplicatedData = dataset.map(item => {
+        const modifiedC = item.c * 1.05; // Increase c by 5%
+        return {
+          ...item,
+          c: modifiedC,
+        };
+      });
+
+      setModifiedDatasetC(duplicatedData);
+
+    }
+
+
+
+
 
   }
 
@@ -89,8 +109,7 @@ const GraphProvider = ({ children }) => {
         modifiedDatasetC,
         handleAChange,
         handleCChange ,
-        showNotification,
-        setNotification,
+ 
         modifiedFgData,
         setModifiedFgData, 
         updateModifiedFg,

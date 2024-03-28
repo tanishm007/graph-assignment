@@ -6,6 +6,7 @@ import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { GraphProvider } from '../context/context';
 import ChartsContainer from "../components/ChartsContainer";
+import Form from '../components/Form'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -22,6 +23,7 @@ const routes = createRoutesFromElements(
       
         <Route path='/' element={<ChartsContainer />} /> 
         <Route path='/hidden' element={<ChartsContainer />} />
+        <Route path='/data' element={<Form />} />
 
   </>
 );

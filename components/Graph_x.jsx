@@ -4,7 +4,8 @@ import Button from 'react-bootstrap/Button';
 import { useContext } from 'react';
 import { GraphContext } from '../context/context';
 import { Link } from 'react-router-dom';
-import Notification from '../context/Notification';
+
+import { ToastContainer, toast } from 'react-toastify';
 
 import {
   Chart as ChartJS,
@@ -66,12 +67,16 @@ export const data = {
 };
 
 const Graph_x = () => {
-    const { modifiedDatasetC, setModifiedDatasetC, modifiedDatasetA, setModifiedDatasetA, handleAChange, handleCChange, setNotification, showNotification, updateModifiedFg } = useContext(GraphContext);
+    const { modifiedDatasetC, setModifiedDatasetC, modifiedDatasetA, setModifiedDatasetA, handleAChange, handleCChange,  updateModifiedFg } = useContext(GraphContext);
 
 
   const duplicateDatasetAndModifyC = () => {
     
     handleCChange();
+
+    toast.success('F_x graph has been updated!', {
+      position: "top-center" // Position setting
+    });
     
   };
 
@@ -79,11 +84,19 @@ const Graph_x = () => {
 
       
     handleAChange();
-    setNotification("F_g graph has been updated!");
+
+    
+
+    toast.success('F_g graph has been updated!', {
+      position: "top-center" // Position setting
+    });
+
     
 
 
   };
+
+
 
   const mergedDataset = [
     ...data.datasets,
@@ -113,6 +126,7 @@ const Graph_x = () => {
 
   return (
     <div> 
+      <ToastContainer/>
       <div>
 
       <Button variant="primary" onClick={duplicateDatasetAndModifyC}>Change c by 5%</Button>{' '}
@@ -121,7 +135,7 @@ const Graph_x = () => {
   
   
 
-        <Notification {...showNotification}/>
+
         
    
      
