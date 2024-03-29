@@ -14,7 +14,6 @@ function BasicExample({data}) {
                         <th>date</th>
                         <th>e</th>
                         <th>f</th>
-                        <th>g</th>
                         <th>h</th>
                     </tr>
                 </thead>
@@ -23,12 +22,12 @@ function BasicExample({data}) {
    
 {data.map((item) => (
    ( // Check if 'a' exists and has a value
-        <tr key={item.id}>
-            <td>{item.id}</td>
+        <tr key={item._id}>
+            <td>{item._id}</td>
             <td>{item.date}</td>
             <td>{item.e}</td>
             <td>{item.f}</td>
-            <td>{item.g}</td>
+  
             <td>{item.h}</td>
         </tr>
     )   // Render nothing if 'a' is missing or falsy

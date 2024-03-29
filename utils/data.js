@@ -1,96 +1,34 @@
-// data.js
 
- const dataset = [
-    {
-      id: 1,
-      date: "1/3/2024",
-      a: 1,
-      b: 1,
-      c: 2,
-      d:3,
-      e: 1
-    },
-    {
-      id: 2,
-      date: "2/3/2024",
-      a: 4,
-      b: 12,
-      c: 18,
-      d:5,
-      e: 5
-    },
-    {
-      id: 3,
-      date: "3/3/2024",
-      a: 4,
-      b: 8,
-      c: 13,
-      d:2,
-      e: 3
-    },
-    {
-      id: 4,
-      date: "4/3/2024",
-      a: 8,
-      b: 8,
-      c: 16,
-      d:4,
-      e: 4
-    },
-    {
-      id: 5,
-      date: "5/3/2024",
-      a: 2,
-      b: 6,
-      c: 9,
-      d: 6,
-      e: 2
-    }
-  ];
+import { useState, useEffect, useContext } from 'react';
+import { GraphProvider } from '../context/context';
+
+export function useFetchData() {
+    const [datasetData, setDatasetData] = useState([]);
+    const [datasetbarData, setDatasetbarData] = useState([]);
+
+    const {setIsLoading} = useContext(GraphProvider)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true); // Set loading to true when fetching starts
+            try {
+                const datasetResponse = await fetch('http://localhost:3002/api/dataset');
+                const datasetbarResponse = await fetch('http://localhost:3002/api/datasetbar');
+
+                setDatasetData(await datasetResponse.json());
+                setDatasetbarData(await datasetbarResponse.json());
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                // Handle the error (e.g., display an error message)
+            } finally {
+                setIsLoading(false); // Set loading to false in any case
+            }
+        };
+
+        fetchData(); 
 
 
-  export const datasetbar = [
-    {
-      id: 1,
-      date: "1/3/2024",
-      e: 1,
-      f: 8,
-      g: 1,
-      h: 5
-    },
-    {
-      id: 2,
-      date: "2/3/2024",
-      e: 5,
-      f: 2,
-      g: 4,
-      h: 14
-    },
-    {
-      id: 3,
-      date: "3/3/2024",
-      e: 3,
-      f: 10,
-      g: 9,
-      h: 9
-    },
-    {
-      id: 4,
-      date: "4/3/2024",
-      e: 4,
-      f: 1,
-      g: 2,
-      h: 1
-    },
-    {
-      id: 5,
-      date: "5/3/2024",
-      e: 2,
-      f: 6,
-      g: 9,
-      h: 7
-    }
-  ];
-  
+    }, []);
 
-  export default dataset;
+    return { datasetData, datasetbarData };
+}

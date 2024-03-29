@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-import { datasetbar } from '../utils/data';
+
 import { Link } from 'react-router-dom';
 
 import { useContext } from 'react';
 import { GraphContext } from '../context/context';
-import dataset from '../utils/data';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -44,7 +44,7 @@ export const options = {
 const calculateFa = (d) => 2 * d + 7;
 const calculateFg = (a, h) => 8 * a + 3 * h;
 
-const Graph_g = () => {
+const Graph_g = ({dataset, datasetbar}) => {
   const { modifiedDatasetA } = useContext(GraphContext)
   
 

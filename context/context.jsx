@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
-import dataset from '../utils/data';
-import { datasetbar } from '../utils/data';
+import { useEffect } from 'react';
+
+
 
 const GraphContext = createContext({
 
@@ -8,6 +9,8 @@ const GraphContext = createContext({
   modifiedDatasetC: null,
   handleAChange: () => {}, 
   handleCChange: () => {}, 
+
+
   
     modifiedFgData: null,
     setModifiedFgData: () => {},
@@ -15,12 +18,23 @@ const GraphContext = createContext({
   
 });
 
+
+
+
 const GraphProvider = ({ children }) => {
+
+
 
   const [modifiedFgData, setModifiedFgData] = useState(null);
   const [modifiedDatasetA, setModifiedDatasetA] = useState(null);
   const [modifiedDatasetC, setModifiedDatasetC] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [datasetData, setDatasetData] = useState([]);
+  const [datasetbarData, setDatasetbarData] = useState([]);
 
+
+
+  
 
 
 
@@ -34,9 +48,11 @@ const GraphProvider = ({ children }) => {
        }));
       setModifiedDatasetA(updatedData);
 
+          
+
   } else {
       // First time modification from original dataset
-      const duplicatedData = dataset.map(item => ({
+      const duplicatedData = datasetData.map(item => ({
           ...item,
           a: item.a * 1.1 // Increase 'a' by 10%
       }));
@@ -67,7 +83,7 @@ const GraphProvider = ({ children }) => {
     }
     else{
 
-      const duplicatedData = dataset.map(item => {
+      const duplicatedData = datasetData.map(item => {
         const modifiedC = item.c * 1.05; // Increase c by 5%
         return {
           ...item,
@@ -94,7 +110,7 @@ const GraphProvider = ({ children }) => {
             date: item.date,
             d: item.d, // Include original 'd' value
             e: item.e, // Include original 'e' value
-            value: 8 * item.a + 3 * datasetbar.find(barItem => barItem.date === item.date).h 
+            value: 8 * item.a + 3 * datasetbarData.find(barItem => barItem.date === item.date).h 
         }));
      
         setModifiedFgData(newFgData);
@@ -103,16 +119,44 @@ const GraphProvider = ({ children }) => {
     }
 };
 
+useEffect(() => {
+  const fetchData = async () => {
+      setIsLoading(true); // Set loading to true when fetching starts
+      try {
+          const datasetResponse = await fetch('http://localhost:3002/api/dataset');
+          const datasetbarResponse = await fetch('http://localhost:3002/api/datasetbar');
+
+          setDatasetData(await datasetResponse.json());
+          setDatasetbarData(await datasetbarResponse.json());
+      } catch (error) {
+          console.error("Error fetching data:", error);
+          // Handle the error (e.g., display an error message)
+      } finally {
+          setIsLoading(false); // Set loading to false in any case
+      }
+  };
+
+  fetchData(); 
+
+
+}, []);
+
+
+
   return (
     <GraphContext.Provider value={{ 
         modifiedDatasetA, 
         modifiedDatasetC,
         handleAChange,
         handleCChange ,
+        datasetbarData,
+        datasetData,
  
         modifiedFgData,
         setModifiedFgData, 
         updateModifiedFg,
+        isLoading,
+        setIsLoading,
      }}>
       {children}
     </GraphContext.Provider>

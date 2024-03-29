@@ -24,7 +24,7 @@ function BasicExample({data}) {
       {data.map((item) => (
      // Check if 'a' exists and has a value
         <tr key={item.id}>
-            <td>{item.id}</td>
+            <td>{item._id}</td>
             <td>{item.date}</td>
             <td>{item.a}</td>
             <td>{item.b}</td>

@@ -1,6 +1,4 @@
-import React, { useState } from 'react';
-import dataset from '../utils/data';
-import {datasetbar} from '../utils/data';
+
 import { useContext } from 'react';
 import { GraphContext } from '../context/context';
 import { useEffect } from 'react';
@@ -41,17 +39,32 @@ export const options = {
 };
 
 const calculateFy = (d, e, g) => d + 2 * e + g;
+const calculateFg = (a, h) => 8*a + 3*h;
 
-const labels = dataset.map(item => item.date);
 
-// Calculate fy values
-const dataset1 = [];
 
-dataset.forEach(item => {
-  const foundBarData = datasetbar.find(barItem => barItem.date === item.date);
-  if (foundBarData) {
-    console.log(foundBarData.g)
-    const fy = calculateFy(item.d, item.e, foundBarData.g);
+
+
+
+
+
+const Graph_y = ({dataset, datasetbar}) => {
+
+  const { modifiedFgData , modifiedDatasetA, updateModifiedFg} = useContext(GraphContext);
+
+  
+  const labels = dataset.map(item => item.date);
+  
+  // Calculate fy values
+  const dataset1 = [];
+  
+  dataset.forEach(item => {
+    const foundBarData = datasetbar.find(barItem => barItem.date === item.date);
+    if (foundBarData) {
+    
+  
+    const gvalue = calculateFg(item.a, foundBarData.h)
+    const fy = calculateFy(item.d, item.e, gvalue);
     console.log(item.d)
    
     dataset1.push(fy);
@@ -60,14 +73,6 @@ dataset.forEach(item => {
     dataset1.push(null); // or any other appropriate value
   }
 });
-
-
-
-
-
-const Graph_y = () => {
-
-  const { modifiedFgData , modifiedDatasetA, updateModifiedFg} = useContext(GraphContext);
 
   useEffect(() => {
     
@@ -102,6 +107,7 @@ const Graph_y = () => {
 
 
   return (
+    
     <div> 
       <div>
        
