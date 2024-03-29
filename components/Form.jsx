@@ -4,10 +4,12 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import { toast } from 'react-toastify';
+import './Form.css'
+import { Button } from 'react-bootstrap';
 
 const DatasetForm = () => {
   const [formData, setFormData] = useState({
-    id: '',
+
     date: '',
     a: '',
     b: '',
@@ -42,6 +44,7 @@ const DatasetForm = () => {
 
     try {
         const response = await axios.put(`http://localhost:3002/api/dataset?date=${formData.date}`, formData); 
+        toast.success('Data updated succesfully!')
         console.log('Update Success:', response);
     } catch (error) {
         console.log("ERROR :",error)
@@ -54,16 +57,24 @@ const handleDelete = async (event, formData) => {
     try {
         const response = await axios.delete(`http://localhost:3002/api/dataset?date=${formData.date}`);
         console.log('Delete Success:', response);
+        toast.success('Data deleted succesfully!')
     } catch (error) {
+      console.log('ERROR :' , error)
        // ... 
     }
 };
 
   return (
-    <div>
+    <div className='form-container'>
         <ToastContainer />
 
+    
+
+
     <form onSubmit={handleSubmit}>
+    <h3>
+                        Datasetfoo
+                    </h3>
     
       <div>
         <label htmlFor="date">Date:</label> 
@@ -75,10 +86,6 @@ const handleDelete = async (event, formData) => {
         <input type="number" id="a" name="a" value={formData.a} onChange={handleChange} />
       </div>
 
-      <div>
-        <label htmlFor="id">ID:</label> 
-        <input type="number" id="id" name="id" value={formData.id} onChange={handleChange} />
-      </div>
 
       <div>
         <label htmlFor="b">B:</label> 
@@ -101,9 +108,14 @@ const handleDelete = async (event, formData) => {
       </div>
 
       {/* ... Input fields for c, d, e  (similar structure) */}
+      <div className='form-btns'>
 
-      <button type="submit">Submit</button>
+      <Button type="submit">Submit</Button>
+      <Button onClick={(event) => handleUpdate(event, formData)}>Update</Button>
+      <Button onClick={(event) => handleDelete(event, formData)}>Delete</Button>
+      </div>
     </form>
+     
     </div>
   );
 };

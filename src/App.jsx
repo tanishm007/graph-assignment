@@ -23,7 +23,7 @@ const routes = createRoutesFromElements(
       
         <Route path='/' element={<ChartsContainer />} /> 
         <Route path='/hidden' element={<ChartsContainer />} />
-        <Route path='/data' element={<Form />} />
+        <Route path='/data' element={<ChartsContainer />} />
 
   </>
 );

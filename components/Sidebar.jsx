@@ -26,10 +26,10 @@ const Sidebar = () => {
                 </NavLink>
       </li>
       <li>
-        <a href="#" class="nav-link link-dark">
-          <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
-          Orders
-        </a>
+      <NavLink to="/data" className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}>
+                    <svg className="bi me-2" width="16" height="16"></svg>
+                    Data input
+                </NavLink>
       </li>
     
     </ul>
