@@ -14,6 +14,12 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
+import moment from 'moment';
+
+import { SimpleLinearRegression } from 'ml-regression-simple-linear';
+
+
+
 
 ChartJS.register(
   CategoryScale,
@@ -52,6 +58,8 @@ const Graph_y = ({dataset, datasetbar}) => {
 
   
 
+  
+
   const { modifiedFgData, modifiedDatasetA, updateModifiedFg } = useContext(GraphContext);
 
   useEffect(() => {
@@ -64,15 +72,19 @@ const Graph_y = ({dataset, datasetbar}) => {
   
   // Calculate fy values
   const dataset1 = [];
+
+
   
   dataset.forEach(item => {
     const foundBarData = datasetbar.find(barItem => barItem.date === item.date);
     if (foundBarData) {
+
+
     
   
     const gvalue = calculateFg(item.a, foundBarData.h)
     const fy = calculateFy(item.d, item.e, gvalue);
-    console.log(item.d)
+  
    
     dataset1.push(fy);
   } else {
@@ -80,6 +92,32 @@ const Graph_y = ({dataset, datasetbar}) => {
     dataset1.push(null); // or any other appropriate value
   }
 });
+
+
+const xAxisData = dataset.map((item) => moment(item.date).valueOf()); 
+
+
+
+// Perform linear regression
+
+
+const regression = new SimpleLinearRegression(xAxisData, dataset1); 
+const slope = regression.slope;
+const intercept = regression.intercept;
+
+// Calculate deviations (adjust this based on how you want to find spikes)
+const deviations = dataset1.map((fyValue, index) => {
+ const predictedFy = slope * xAxisData[index] + intercept;
+ return fyValue - predictedFy;
+});
+
+// Calculate deviations and find the largest
+
+  const maxDeviation = Math.max(...deviations);
+  const spikeIndex = deviations.indexOf(maxDeviation);
+  const spikeValue = dataset1[spikeIndex];
+
+  console.log("Highest Spike Value:", spikeValue);
 
 
 
