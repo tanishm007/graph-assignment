@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
 
 
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import { useContext } from 'react';
 import { GraphContext } from '../context/context';
@@ -45,8 +45,9 @@ const calculateFa = (d) => 2 * d + 7;
 const calculateFg = (a, h) => 8 * a + 3 * h;
 
 const Graph_g = ({dataset, datasetbar}) => {
-  const { modifiedDatasetA } = useContext(GraphContext)
-  
+  const { modifiedDatasetA, updateModifiedFg } = useContext(GraphContext)
+
+
 
 
   const dataFa = {
@@ -105,9 +106,7 @@ const Graph_g = ({dataset, datasetbar}) => {
 
         <div className="graph-container">
           <div className="graph">
-            <Link to="/">
-              home
-            </Link>
+         
            
             <Line options={options} data={dataFa} />
           </div>

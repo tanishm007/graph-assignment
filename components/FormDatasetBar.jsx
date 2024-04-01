@@ -32,6 +32,31 @@ const DatasetbarForm = () => {
     };
 
     // Implement handleUpdate and handleDelete similar to DatasetForm
+
+    const handleUpdate = async (event, formData) => { 
+        // ...
+    
+        try {
+            const response = await axios.put(`http://localhost:3002/api/datasetbar?date=${formData.date}`, formData); 
+            toast.success('Data of Datasetbar updated succesfully!')
+            console.log('Update Success:', response);
+        } catch (error) {
+            console.log("ERROR :",error)
+        }
+    };
+    
+    const handleDelete = async (event, formData) => {
+        // ...
+    
+        try {
+            const response = await axios.delete(`http://localhost:3002/api/datasetbar?date=${formData.date}`);
+            console.log('Delete Success:', response);
+            toast.success(`Data of Datasetbar of date: ${formData.data} deleted succesfully!`)
+        } catch (error) {
+          console.log('ERROR :' , error)
+           // ... 
+        }
+    };
     
     return (
         <>

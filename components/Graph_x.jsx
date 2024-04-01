@@ -39,7 +39,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
+      text: 'f_x Line Chart',
     },
   },
 };
@@ -54,7 +54,7 @@ const calculateFxa = (a, b, e) => 3*a + 5*b + e;
 
 
 const Graph_x = ({dataset}) => {
-  const { modifiedDatasetC, setModifiedDatasetC, modifiedDatasetA, setModifiedDatasetA, handleAChange, handleCChange,  updateModifiedFg } = useContext(GraphContext);
+  const { modifiedDatasetC, modifiedDatasetA, handleAChange, handleCChange } = useContext(GraphContext);
   
   
 

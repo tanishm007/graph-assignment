@@ -33,7 +33,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
+      text: 'f_y Line Chart',
     },
   },
 };
@@ -50,8 +50,15 @@ const calculateFg = (a, h) => 8*a + 3*h;
 
 const Graph_y = ({dataset, datasetbar}) => {
 
-  const { modifiedFgData , modifiedDatasetA, updateModifiedFg} = useContext(GraphContext);
+  
 
+  const { modifiedFgData, modifiedDatasetA, updateModifiedFg } = useContext(GraphContext);
+
+  useEffect(() => {
+    
+    updateModifiedFg();
+
+}, [modifiedDatasetA]);
   
   const labels = dataset.map(item => item.date);
   
@@ -74,11 +81,7 @@ const Graph_y = ({dataset, datasetbar}) => {
   }
 });
 
-  useEffect(() => {
-    
-    updateModifiedFg();
 
-}, [modifiedDatasetA]);
 
   const data = {
     labels,
