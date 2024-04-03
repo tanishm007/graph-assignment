@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 
 const GraphContext = createContext({
 
+  
+
   modifiedDatasetA: null,
   modifiedDatasetC: null,
   handleAChange: () => {}, 
@@ -22,6 +24,36 @@ const GraphContext = createContext({
 
 
 const GraphProvider = ({ children }) => {
+
+  class PolynomialFunction {
+    constructor(expression, variables, constants, dependencies) {
+        this.expression = expression;
+        this.variables = variables;
+        this.constants = constants;
+  
+        this.dependencies = dependencies;
+    }
+
+    evaluate(variableValues) {
+        let expressionWithValues = this.expression;
+
+        for (const variable in variableValues) {
+            if (variableValues.hasOwnProperty(variable)) { 
+                const replacement = `*(${variableValues[variable]})`; 
+                expressionWithValues = expressionWithValues.replace(variable, replacement);
+            }
+        }
+
+        try {
+            return eval(expressionWithValues);
+        } catch (error) {
+            // Consider throwing a custom error for better error handling
+            throw new Error('Evaluation Error: ' + error.message);
+        }
+    }
+}
+
+const polynomialFunction = new PolynomialFunction();
 
 
 
@@ -146,7 +178,7 @@ useEffect(() => {
         modifiedDatasetC,
         handleAChange,
         handleCChange ,
-     
+        polynomialFunction,
  
         modifiedFgData,
         setModifiedFgData, 

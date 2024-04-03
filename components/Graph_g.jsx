@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useContext } from 'react';
 import { GraphContext } from '../context/context';
 
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,6 +18,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { create, all } from 'mathjs';
 
 ChartJS.register(
   CategoryScale,
@@ -41,13 +43,35 @@ export const options = {
   },
 };
 
-const calculateFa = (d) => 2 * d + 7;
-const calculateFg = (a, h) => 8 * a + 3 * h;
-
-const Graph_g = ({dataset, datasetbar}) => {
-  const { modifiedDatasetA, updateModifiedFg } = useContext(GraphContext)
 
 
+const Graph_g = ({dataset, datasetbar, allFormulas}) => {
+  const { modifiedDatasetA } = useContext(GraphContext)
+
+
+
+  const foundFormulaa = allFormulas.find(formula => formula.name === 'Fa');
+  const foundFormulag = allFormulas.find(formula => formula.name === 'Fg')
+  if(foundFormulaa)
+  console.log("fy formula", foundFormulaa);
+
+  if(foundFormulag)
+  console.log("fg formula", foundFormulag);
+
+
+  
+  const config = {};
+  const math = create(all, config);
+
+  const evaluateFormula = (formula, values) => {
+    try {
+      const node = math.parse(formula.expression);
+      const compiled = node.compile();
+      return compiled.evaluate(values);
+    } catch (error) {
+      throw new Error(`Error evaluating formula '${formula.name}': ${error.message}`); 
+    }
+  };
 
 
   const dataFa = {
@@ -55,7 +79,9 @@ const Graph_g = ({dataset, datasetbar}) => {
     datasets: [
       {
         label: 'F_a',
-        data: dataset.map(item => calculateFa(item.d)),
+        data: dataset.map(item => {
+          const value = {d: item.d}
+          return evaluateFormula(foundFormulaa, value)}),
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
         tension: 0.5
@@ -71,10 +97,13 @@ const Graph_g = ({dataset, datasetbar}) => {
         {
           label: 'F_g',
           data: datasetbar.map(item => {
-            const a = dataset.find(fooItem => fooItem.date === item.date).a;
+            const aval = dataset.find(fooItem => fooItem.date === item.date).a;
             const h = item.h;
+            const value = {a:aval, h: item.h}
+            
            
-            return calculateFg(a, h);
+         //   return calculateFg(a, h);
+            return evaluateFormula(foundFormulag, value)
           }),
           borderColor: 'rgb(54, 162, 235)',
           backgroundColor: 'rgba(54, 162, 235, 0.5)',
@@ -86,9 +115,11 @@ const Graph_g = ({dataset, datasetbar}) => {
                
                 label: 'Modified F_g', 
                 data: modifiedDatasetA.map(item => {
-                  const a = item.a; // Use modified 'a' value
-                  const h = datasetbar.find(barItem => barItem.date === item.date).h;
-                  return calculateFg(a, h);
+                  const aval = item.a; // Use modified 'a' value
+                  const hval = datasetbar.find(barItem => barItem.date === item.date).h;
+      
+                  const value = {a: aval, h:hval}
+                  return evaluateFormula(foundFormulag, value);
                 }),
                 borderColor: 'rgb(255, 0, 255)', // New color
                 backgroundColor: 'rgba(255, 0, 255, 0.5)',

@@ -18,6 +18,8 @@ import moment from 'moment';
 
 import { SimpleLinearRegression } from 'ml-regression-simple-linear';
 import { Button } from 'react-bootstrap';
+import jStat from 'jstat';
+import { create, all } from 'mathjs';
 
 
 
@@ -45,17 +47,25 @@ export const options = {
   },
 };
 
-const calculateFy = (d, e, g) => d + 2 * e + g;
-const calculateFg = (a, h) => 8*a + 3*h;
 
 
+const Graph_y = ({dataset, datasetbar, allFormulas}) => {
 
 
+  
+  const config = {};
+  const math = create(all, config);
 
+  const evaluateFormula = (formula, values) => {
+    try {
+      const node = math.parse(formula.expression);
+      const compiled = node.compile();
+      return compiled.evaluate(values);
+    } catch (error) {
+      throw new Error(`Error evaluating formula '${formula.name}': ${error.message}`); 
+    }
+  };
 
-
-
-const Graph_y = ({dataset, datasetbar}) => {
 
   
   const [showVariables, setShowVariables] = useState(false); 
@@ -63,6 +73,15 @@ const Graph_y = ({dataset, datasetbar}) => {
 
   const { modifiedFgData, modifiedDatasetA, updateModifiedFg } = useContext(GraphContext);
 
+  const foundFormulay = allFormulas.find(formula => formula.name === 'Fy');
+  const foundFormulag = allFormulas.find(formula => formula.name === 'Fg')
+  if(foundFormulay)
+  console.log("fy formula", foundFormulay.dependencies);
+
+  if(foundFormulag)
+  console.log("fg formula", foundFormulag);
+
+  
   useEffect(() => {
     
     updateModifiedFg();
@@ -74,16 +93,11 @@ const Graph_y = ({dataset, datasetbar}) => {
   // Calculate fy values
   const dataset1 = [];
 
-  const formulas = {
-    fy: {
-      formula: "d + 2 * e + g",
-      dependencies: ["d", "e", "a", "h"],
-    },
-
-    // ... add more formulas here
-  };
 
   const allVariables = new Set(); 
+
+
+  /*
   const extractVariables = (formulaName) => {
     const formula = formulas[formulaName];
     formula.dependencies.forEach((dep) => {
@@ -95,6 +109,14 @@ const Graph_y = ({dataset, datasetbar}) => {
   };
   extractVariables("fy"); 
 
+  */
+ 
+ if (foundFormulay) {
+   foundFormulay.dependencies.forEach(dep => allVariables.add(dep));
+  }
+  console.log("all vairbles", Array.from(allVariables));
+ 
+
   
   dataset.forEach(item => {
     const foundBarData = datasetbar.find(barItem => barItem.date === item.date);
@@ -103,8 +125,14 @@ const Graph_y = ({dataset, datasetbar}) => {
 
     
   
-    const gvalue = calculateFg(item.a, foundBarData.h)
-    const fy = calculateFy(item.d, item.e, gvalue);
+   // const gvalue = calculateFg(item.a, foundBarData.h)
+   
+   const gvalue = foundFormulag ? evaluateFormula(foundFormulag, {a: item.a, h: foundBarData.h}) : null; 
+   const fy = foundFormulay ? evaluateFormula(foundFormulay, {d: item.d, e:item.e, g:gvalue }) : null;
+  // const fy = calculateFy(item.d, item.e, gvalue);
+
+
+  
   
    
     dataset1.push(fy);
@@ -127,20 +155,49 @@ const slope = regression.slope;
 const intercept = regression.intercept;
 
 // Calculate deviations (adjust this based on how you want to find spikes)
+let maxDeviation = -Infinity; 
+let spikeDataPoint = null; 
 const deviations = dataset1.map((fyValue, index) => {
- const predictedFy = slope * xAxisData[index] + intercept;
- return fyValue - predictedFy;
+  const predictedFy = slope * xAxisData[index] + intercept;
+  const deviation = fyValue - predictedFy; 
+  if (deviation > maxDeviation) { // Update only if a larger deviation is found
+      maxDeviation = deviation; 
+      spikeDataPoint = { x: xAxisData[index], y: fyValue }; 
+  }
+  return deviation; 
 });
 
 // Calculate deviations and find the largest
 
-  const maxDeviation = Math.max(...deviations);
+    maxDeviation = Math.max(...deviations);
   const spikeIndex = deviations.indexOf(maxDeviation);
   const spikeValue = dataset1[spikeIndex];
 
   console.log("Highest Spike Value:", spikeValue);
 
+  // finding correlation coefficients
 
+  const correlations = Array.from(allVariables).map((variable) => {
+    // Combine data for correlation, prioritizing dataset
+    const combinedData = dataset.map((item, index) => {
+      if (variable in item) {
+       
+        return item[variable]; 
+      } else {
+        const foundBarData = datasetbar.find((barItem) => barItem.date === item.date);
+        return foundBarData ? foundBarData[variable] : null; 
+      }
+    });
+
+    console.log("combined data", combinedData)
+
+  
+  
+    const corr = jStat.corrcoeff(dataset1, combinedData); 
+    return { variable, correlation: corr };
+  });
+
+  console.log("ma", modifiedDatasetA)
 
   const colors = [
     "rgb(255, 99, 132)",
@@ -166,7 +223,11 @@ const deviations = dataset1.map((fyValue, index) => {
             {
                 label: 'Modified F_y',
                 // Use values from modifiedFgData
-                data: modifiedFgData.map(item => calculateFy(item.d, item.e, item.value)),
+                data: modifiedFgData.map(item => {
+                  const value = {d: item.d, e:item.e, g: item.value};
+
+                  return evaluateFormula(foundFormulay, value)
+                }),
                 // ... other styles
                 borderColor: 'rgb(143, 0, 255)',
                 backgroundColor: 'rgba(143, 0, 255, 0.5)',
@@ -174,25 +235,35 @@ const deviations = dataset1.map((fyValue, index) => {
             }
         ] : []),
 
-        ...(showVariables 
-            ? Array.from(allVariables).map((variable, index) => ({
-                  label: variable,
-                  data: dataset.map((item) => {
-                      if (variable in item) {
-                          return item[variable];
-                      } else {
-                          const foundBarData = datasetbar.find(
-                              (barItem) => barItem.date === item.date
-                          );
-                          return foundBarData ? foundBarData[variable] : null; 
-                      }
-                  }),
-                  borderColor: colors[index % colors.length],
-                  backgroundColor: `${colors[index % colors.length]}4D`,
-                  tension: 0.5 
-              })) 
-            : [] 
-        ), // <-- Added a comma here
+        ...(showVariables ?
+          Array.from(allVariables).map((variable, index) => {
+            const corr = correlations.find((c) => c.variable === variable).correlation;
+      
+            // Conditional Data Source Selection
+            const dataToUse = modifiedDatasetA 
+                                ? modifiedDatasetA.map(modItem => 
+                                      modItem[variable] !== undefined 
+                                          ? modItem[variable] 
+                                          : dataset.find(item => item.date === modItem.date)[variable] 
+                                  )
+                                : dataset.map(item => item[variable]);
+      
+            return {
+              label: `${variable} (corr: ${corr.toFixed(2)})`,
+              data: dataToUse, 
+              borderColor: colors[index % colors.length],
+              backgroundColor: `${colors[index % colors.length]}4D`,
+              tension: 0.5,
+            };
+          })
+          : []),
+          { // Dataset for the Spike
+            label: 'Spike',
+            data: spikeDataPoint ? [spikeDataPoint] : [], 
+            backgroundColor: 'black',
+            borderColor: 'black',
+            pointRadius: 5, // Increase dot size for visibility 
+        },
     ],
 };
 
