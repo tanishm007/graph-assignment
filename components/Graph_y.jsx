@@ -238,15 +238,25 @@ const deviations = dataset1.map((fyValue, index) => {
         ...(showVariables ?
           Array.from(allVariables).map((variable, index) => {
             const corr = correlations.find((c) => c.variable === variable).correlation;
+            console.log("corr", corr)
       
             // Conditional Data Source Selection
-            const dataToUse = modifiedDatasetA 
-                                ? modifiedDatasetA.map(modItem => 
-                                      modItem[variable] !== undefined 
-                                          ? modItem[variable] 
-                                          : dataset.find(item => item.date === modItem.date)[variable] 
-                                  )
-                                : dataset.map(item => item[variable]);
+            
+            const dataToUse = modifiedDatasetA
+            ? modifiedDatasetA.map(modItem => 
+                    modItem[variable] !== undefined 
+                        ? modItem[variable] 
+                        : dataset.find(item => item.date === modItem.date)[variable] !== undefined
+                            ? dataset.find(item => item.date === modItem.date)[variable]
+                            : datasetbar.find(barItem => barItem.date === modItem.date)?.[variable]  // Check datasetbar only as the last resort
+            )
+            : dataset.map(item => 
+                    item[variable] !== undefined
+                        ? item[variable]
+                        : datasetbar.find(barItem => barItem.date === item.date)?.[variable] // Check datasetbar only as the last resort 
+             );
+        
+                             
       
             return {
               label: `${variable} (corr: ${corr.toFixed(2)})`,
