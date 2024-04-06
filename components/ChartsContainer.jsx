@@ -19,11 +19,14 @@ import InputData from '../pages/InputData';
 
 
 
+
 const ChartsContainer = () => {
     // ... other imports 
     const [datasetData, setDatasetData] = useState([]);
     const [datasetbarData, setDatasetbarData] = useState([]);
     const [formulas, setFormulas] = useState([]);
+    const [showVariables, setShowVariables] = useState(false);
+ 
     useEffect(() => {
         const fetchData = async () => {
        // Set loading to true when fetching starts
@@ -131,7 +134,11 @@ const ChartsContainer = () => {
                                </div>
                                 <Graph_x dataset= {datasetData} datasetbar={datasetbarData} formulas={formulas}/>
                                 <Graph_y dataset={datasetData} datasetbar={datasetbarData}
-                                allFormulas = {formulas}/>
+                                allFormulas = {formulas}
+                                showVariables={showVariables} 
+                                setShowVariables={setShowVariables} 
+                          
+                                />
                                
                             </div>
                         )}

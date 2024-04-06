@@ -49,7 +49,7 @@ export const options = {
 
 
 
-const Graph_y = ({dataset, datasetbar, allFormulas}) => {
+const Graph_y = ({dataset, datasetbar, allFormulas, setShowVariables, showVariables}) => {
 
 
   
@@ -68,7 +68,7 @@ const Graph_y = ({dataset, datasetbar, allFormulas}) => {
 
 
   
-  const [showVariables, setShowVariables] = useState(false); 
+  //const [showVariables, setShowVariables] = useState(false); 
   
 
   const { modifiedFgData, modifiedDatasetA, updateModifiedFg } = useContext(GraphContext);
@@ -122,8 +122,6 @@ const Graph_y = ({dataset, datasetbar, allFormulas}) => {
     const foundBarData = datasetbar.find(barItem => barItem.date === item.date);
     if (foundBarData) {
 
-
-    
   
    // const gvalue = calculateFg(item.a, foundBarData.h)
    

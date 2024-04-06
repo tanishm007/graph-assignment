@@ -11,6 +11,7 @@ const GraphContext = createContext({
   modifiedDatasetC: null,
   handleAChange: () => {}, 
   handleCChange: () => {}, 
+  
 
 
   
@@ -62,6 +63,9 @@ const polynomialFunction = new PolynomialFunction();
   const [modifiedDatasetC, setModifiedDatasetC] = useState(null);
   const [datasetData, setDatasetData] = useState([]);
   const [datasetbarData, setDatasetbarData] = useState([]);
+
+ 
+    const [formulas, setFormulas] = useState([]);
 
 
 
@@ -179,6 +183,9 @@ useEffect(() => {
         handleAChange,
         handleCChange ,
         polynomialFunction,
+        setDatasetData,
+        setDatasetbarData,
+        setFormulas,
  
         modifiedFgData,
         setModifiedFgData, 
